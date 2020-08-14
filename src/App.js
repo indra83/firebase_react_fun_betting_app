@@ -1,26 +1,51 @@
 import React from 'react';
-import logo from './logo.svg';
+import YouTube from 'react-youtube';
+import { auth } from './firebase';
+import Match from './Match';
 import './App.css';
+import SignIn from './SignIn';
 
-function App() {
-  return (
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      authenticated: false,
+      loading: true
+    };
+
+    this.opts = {
+      height: '390',
+      width: '640',
+      playerVars: {
+       autoplay: 0,
+      },
+    }
+  }
+
+  componentDidMount() {
+    auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log(user);
+        this.setState({
+          authenticated: true,
+          loading: false,
+          user:user
+        });
+      } else {
+        this.setState({
+          authenticated: false,
+          loading: false
+        });
+      }
+    });
+  }
+
+  render(){ return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload. ass
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <YouTube videoId="2g811Eo7K8U" opts={this.opts} />
+      {this.state.authenticated ? (<Match user={this.state.user}/>) : (<SignIn/>)}
+    </div>)
+  }
 }
 
 export default App;
