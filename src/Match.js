@@ -15,8 +15,8 @@ class Match extends React.Component {
   componentDidMount() {
     this.unsubscribe = db.collection("matches").doc("testmatch")
     .onSnapshot((doc) => {
-        console.log("Current data: ", doc.data());
-        console.log("Doc:",doc);
+        console.log("Match::Current data: ", doc.data());
+        console.log("Match::Doc:",doc);
         this.setState({match: doc.data(), matchId: doc.id});
     });
   }
@@ -26,6 +26,7 @@ class Match extends React.Component {
   }
 
   renderer = ({ hours, minutes, seconds, completed }) => {
+        console.log("Match:: completed?",{ hours, minutes, seconds, completed });
         if (completed) {
             // Render a completed state
             return <span >Betting has ended.</span>;
@@ -40,7 +41,7 @@ class Match extends React.Component {
         ? 
         (<div><h3>{this.state.match.title}</h3>
            <Countdown date={this.state.match.startTime.toDate()} render={this.renderer}/>
-           <MatchBets matchId={this.state.matchId} match ={this.state.match} {...this.props}/>
+           <MatchBets matchId={this.state.matchId} match ={this.state.match} user={this.props.user}/>
             </div>)
         : 
         (<span><Spinner animation="border" />Fetching match details...</span>))

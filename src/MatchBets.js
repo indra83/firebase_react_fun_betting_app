@@ -1,14 +1,18 @@
 import React from 'react';
 import { db } from './firebase';
 
-import Spinner from 'react-bootstrap/Spinner';
-import { Container, Row, Col } from 'react-bootstrap';
+import MyBet from './MyBet';
+import {Spinner, Container, Row, Col } from 'react-bootstrap';
 
 class MatchBets extends React.Component {
   constructor(props) {
     super(props);
+    this.bettingActive = props.match.startTime.toDate().getTime() > new Date().getTime();
     console.log("props",this.props);
-    this.state={hasBetsData: false, match: props.match, bettingActive: (props.match.startTime.toDate()>new Date())};
+    this.state={
+        hasBetsData: false, 
+        myBet: null
+    };
   }
 
   componentDidMount() {
@@ -18,16 +22,17 @@ class MatchBets extends React.Component {
         querySnapshot.forEach(function(doc) {
             betsByUser[doc.id] = doc.data()
         });
-        console.log("Current data: ", betsByUser);
-        this.setState({hasBetsData: true, betsByUser:betsByUser, userBet:null});
+        console.log("MatchBets::Current data: ", betsByUser);
+        this.setState({
+            hasBetsData: true, 
+            betsByUser:betsByUser, 
+            myBet:betsByUser[this.props.user.id]
+        });
     });
-    // Redraw after betting window closes
-    this.betActiveTimer = setTimeout(() => {this.setState({bettingActive: false})}, this.props.match.startTime.toDate() - new Date());
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-    clearTimeout(this.betActiveTimer);
   }
 
   render() {
@@ -40,11 +45,11 @@ class MatchBets extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        {this.state.bettingActive
-                        ?
-                        (<span>Place bets</span>)
-                        :
-                        (<span>Betting closed</span>)}
+                        <MyBet myBet={this.state.myBet}
+                            matchId={this.props.matchId}
+                            bettingActive={this.bettingActive} 
+                            match={this.props.match}
+                            user={this.props.user}/>
                     </Col>
                 </Row></>)
                 : 
