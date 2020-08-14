@@ -2,11 +2,8 @@ import React from 'react';
 import { db } from './firebase';
 
 import Spinner from 'react-bootstrap/Spinner';
-import Countdown from 'react-countdown';
 
-import MatchBets from './MatchBets';
-
-class Match extends React.Component {
+class MyBet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {match:null};
@@ -47,4 +44,4 @@ class Match extends React.Component {
   }
 }
 
-export default Match;
+export default MyBet;
