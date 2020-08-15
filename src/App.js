@@ -4,6 +4,8 @@ import { auth } from './firebase';
 import Match from './Match';
 import './App.css';
 import SignIn from './SignIn';
+import { Container, Row, Col } from 'react-bootstrap';
+import ChatWidget from './ChatWidget';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,7 +19,7 @@ class App extends React.Component {
       height: '390',
       width: '640',
       playerVars: {
-       autoplay: 0,
+       autoplay: 1,
       },
     }
   }
@@ -42,8 +44,17 @@ class App extends React.Component {
 
   render(){ return (
     <div className="App">
-      <YouTube videoId="nNQMVC_njf0" opts={this.opts} />
-      {this.state.authenticated ? (<Match user={this.state.user}/>) : (<SignIn/>)}
+      <Container fluid>
+        <Row>
+          <Col>
+            <YouTube videoId="nNQMVC_njf0" opts={this.opts} />
+            {this.state.authenticated ? (<Match user={this.state.user}/>) : (<SignIn/>)}
+          </Col>
+          <Col>
+            {this.state.authenticated ? (<ChatWidget user={this.state.user}/>) : (<SignIn/>)}
+          </Col>
+        </Row>
+      </Container>
     </div>)
   }
 }

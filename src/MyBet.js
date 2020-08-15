@@ -10,10 +10,9 @@ import 'rc-slider/assets/index.css';
 
 class MyBet extends React.Component {
   constructor(props) {
-      console.log("MyBet:: props", props);
     super(props);
+    console.log("MyBet:: props", props);
     this.state = {
-        match:props.match,
         teamSelected:props.myBet?props.myBet.team:null,
         betAmount:props.myBet?props.myBet.betAmount:500,
         comment:props.myBet?props.myBet.comment:"",
@@ -50,7 +49,7 @@ class MyBet extends React.Component {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
             
         };
-
+      var betOnTeamId = newBet.team == 'team1' ? this.props.match.team1 : this.props.match.team2;
       var betRef = db.collection('matches').doc(matchId)
                     .collection('bets').doc(user.uid);
       batch.set(betRef, newBet);
@@ -59,6 +58,18 @@ class MyBet extends React.Component {
                         .collection('bets').doc(user.uid)
                         .collection('versions').doc(uuid());
       batch.set(betVersionRef, newBet);
+
+      var chatMessageRef =db.collection('messages').doc(uuid());
+                        // .collection('matches').doc(matchId)
+                        // .collection('versions').doc(uuid());
+      var chatMessage = {
+        type:'bet', 
+        data:newBet, 
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        text: (newBet.displayName + " bet " + newBet.betAmount + " on "+ betOnTeamId)
+      };
+
+      batch.set(chatMessageRef, chatMessage);
 
       batch.commit().then(function() {
             console.log("Document successfully written!");
@@ -76,8 +87,8 @@ class MyBet extends React.Component {
 
             <Form.Label>Team (selected team wins &rArr; you make money)</Form.Label>
             <div key='inline-radio' className="mb-3">            
-            <Form.Check checked={this.state.teamSelected=='team1'} name='team' type='radio' id='team1' label={this.state.match.team1} onChange={this.handleTeamPick}/>
-            <Form.Check checked={this.state.teamSelected=='team2'} name='team' type='radio' id='team2' label={this.state.match.team2} onChange={this.handleTeamPick}/>
+            <Form.Check checked={this.state.teamSelected=='team1'} name='team' type='radio' id='team1' label={this.props.match.team1} onChange={this.handleTeamPick}/>
+            <Form.Check checked={this.state.teamSelected=='team2'} name='team' type='radio' id='team2' label={this.props.match.team2} onChange={this.handleTeamPick}/>
             </div>
 
             <Form.Label>Bet Amount</Form.Label>

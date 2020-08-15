@@ -32,7 +32,7 @@ class Match extends React.Component {
             return <span >Betting has ended.</span>;
         } else {
             // Render a countdown
-            return <span>Betting ends in {hours}:{minutes}:{seconds}</span>;
+            return <div><span>Betting ends in </span><span>{hours}:{minutes}:{seconds}</span></div>;
         }
     }
 
