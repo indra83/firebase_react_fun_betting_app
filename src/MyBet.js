@@ -3,7 +3,7 @@ import React from 'react';
 import { db } from './firebase';
 import uuid from 'react-uuid'
 
-import { Form , Row, Button} from 'react-bootstrap';
+import { Form , Row, Button, Container} from 'react-bootstrap';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -70,6 +70,7 @@ class MyBet extends React.Component {
 
   getBetForm = () =>{
       return (
+        <Container>
         <Form.Group >
             <h3> Place Bet </h3>
 
@@ -85,11 +86,12 @@ class MyBet extends React.Component {
                 size='lg' step={500} min={500} max={2000}/>
 
             <Form.Label>Quote</Form.Label>
-            <Form.Control size="lg" type="text"
+            <Form.Control type="text"
                  value={this.state.comment} onChange={this.handleComment} />
 
-            <Button variant="primary" onClick={this.placeBet}>Place Bet</Button>;
+            <Button variant="primary" onClick={this.placeBet}>Place Bet</Button>
         </Form.Group>
+        </Container>
       )
   }
 

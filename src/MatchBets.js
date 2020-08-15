@@ -2,13 +2,14 @@ import React from 'react';
 import { db } from './firebase';
 
 import MyBet from './MyBet';
+import TeamBets from './TeamBets';
 import {Spinner, Container, Row, Col } from 'react-bootstrap';
 
 class MatchBets extends React.Component {
   constructor(props) {
     super(props);
     this.bettingActive = props.match.startTime.toDate().getTime() > new Date().getTime();
-    console.log("props",this.props);
+    console.log("MatchBets::props",this.props);
     this.state={
         hasBetsData: false, 
         myBet: null
@@ -18,15 +19,19 @@ class MatchBets extends React.Component {
   componentDidMount() {
     this.unsubscribe = db.collection("matches").doc(this.props.matchId).collection("bets")
     .onSnapshot((querySnapshot) => {
-        var betsByUser = {};
-        querySnapshot.forEach(function(doc) {
-            betsByUser[doc.id] = doc.data()
+        var myBet;
+        var bets = {'team1':[], 'team2':[]} 
+
+        querySnapshot.forEach((doc) => {
+          var bet = doc.data();
+          if(doc.id==this.props.user.uid) myBet = bet;
+          bets[bet.team].push(bet);
         });
-        console.log("MatchBets::Current data: ", betsByUser);
+        console.log("MatchBets::Current data: ", bets);
         this.setState({
             hasBetsData: true, 
-            betsByUser:betsByUser, 
-            myBet:betsByUser[this.props.user.id]
+            bets:bets, 
+            myBet:myBet
         });
     });
   }
@@ -40,8 +45,8 @@ class MatchBets extends React.Component {
         <Container>
             {this.state.hasBetsData ? 
                 (<><Row>
-                    <Col> <span>{this.state.betsByUser.length}</span></Col>
-                    <Col> <span>{this.state.betsByUser.length}</span></Col>
+                    <Col> <TeamBets whichTeam='team1' match={this.props.match} bets={this.state.bets['team1']}/></Col>
+                    <Col> <TeamBets whichTeam='team2' match={this.props.match} bets={this.state.bets['team2']}/></Col>
                 </Row>
                 <Row>
                     <Col>
