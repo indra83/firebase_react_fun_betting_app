@@ -26,13 +26,13 @@ class Match extends React.Component {
   }
 
   renderer = ({ hours, minutes, seconds, completed }) => {
-        console.log("Match:: completed?",{ hours, minutes, seconds, completed });
+        var timeLeftStr = hours.toString()+':'+minutes.toString()+':'+seconds.toString();
         if (completed) {
             // Render a completed state
             return <span >Betting has ended.</span>;
         } else {
             // Render a countdown
-            return <div><span>Betting ends in </span><span>{hours}:{minutes}:{seconds}</span></div>;
+            return <div><span>Betting ends in <b>{timeLeftStr}</b></span></div>;
         }
     }
 
@@ -40,7 +40,7 @@ class Match extends React.Component {
     return (this.state.match 
         ? 
         (<div><h3>{this.state.match.title}</h3>
-           <Countdown date={this.state.match.startTime.toDate()} render={this.renderer}/>
+           <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/>
            <MatchBets matchId={this.state.matchId} match ={this.state.match} user={this.props.user}/>
             </div>)
         : 

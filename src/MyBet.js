@@ -13,6 +13,7 @@ class MyBet extends React.Component {
     super(props);
     console.log("MyBet:: props", props);
     this.state = {
+        bettingActive:props.bettingActive,
         teamSelected:props.myBet?props.myBet.team:null,
         betAmount:props.myBet?props.myBet.betAmount:500,
         comment:props.myBet?props.myBet.comment:"",
@@ -34,6 +35,12 @@ class MyBet extends React.Component {
   };
   
   placeBet = (e) => {
+      console.log('MyBet:: now?',new Date().getTime());
+      if(new Date()>this.props.match.startTime.toDate()) {
+        alert('Oops! Betting has closed!');
+        this.setState({bettingActive:false})
+        return;
+      }
       console.log("MyBet::placebet--",this.props);
       var matchId = this.props.matchId;
       var user = this.props.user;
@@ -41,6 +48,7 @@ class MyBet extends React.Component {
       var batch = db.batch();
 
       var newBet = {
+            uid: user.uid,
             userName: user.email,
             displayName: user.displayName,
             team: this.state.teamSelected,
@@ -91,7 +99,7 @@ class MyBet extends React.Component {
             <Form.Check checked={this.state.teamSelected=='team2'} name='team' type='radio' id='team2' label={this.props.match.team2} onChange={this.handleTeamPick}/>
             </div>
 
-            <Form.Label>Bet Amount</Form.Label>
+            <Form.Label>Bet Amount {this.state.betAmount}</Form.Label>
             <Slider value={this.state.betAmount}
                 onChange={this.handleBetAmountChange}
                 size='lg' step={500} min={500} max={2000}/>
@@ -100,6 +108,8 @@ class MyBet extends React.Component {
             <Form.Control type="text"
                  value={this.state.comment} onChange={this.handleComment} />
 
+            <br/>
+
             <Button variant="primary" onClick={this.placeBet}>Place Bet</Button>
         </Form.Group>
         </Container>
@@ -107,7 +117,7 @@ class MyBet extends React.Component {
   }
 
   render() {
-    return (this.props.bettingActive 
+    return (this.state.bettingActive 
         ? 
         this.getBetForm()
         : 

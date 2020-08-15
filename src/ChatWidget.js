@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { db } from './firebase';
-import {Container, Spinner, } from 'react-bootstrap';
+import {Container, Spinner, ListGroup} from 'react-bootstrap';
 
 class ChatWidget extends React.Component {
   constructor(props) {
@@ -14,13 +14,13 @@ class ChatWidget extends React.Component {
   }
 
   componentDidMount() {
-    this.unsubscribe = db.collection("messages").onSnapshot(
+    this.unsubscribe = db.collection("messages").orderBy('timestamp','desc').limit(200).onSnapshot(
       snapshot => {
-        var messages = [...this.state.chatMessages]
-        snapshot.docChanges().forEach(change => {
-              if (change.type === 'added') {
-                messages.push(change.doc.data())
-              }
+        console.log('ChatWidget::snapshot--',snapshot);
+        // if (snapshot.metadata.hasPendingWrites) {console.log("has pending writes",snapshot);return;}
+        var messages = []
+        snapshot.forEach(doc => {
+                messages.push(doc.data())
             })
         this.setState({
           isLoading: false,
@@ -44,15 +44,32 @@ class ChatWidget extends React.Component {
       return titles[teamId];
   }
 
+  getMessageTimeString = (message) => {
+    if(message.timestamp) return message.timestamp.toDate().toLocaleTimeString();
+    return new Date().toLocaleTimeString();
+  }
+
   renderLoading=()=>(<span><Spinner animation="border" />Fetching chat messages...</span>)
+
+  renderMessage = (message) =>(
+    <ListGroup.Item key={message.timestamp}>    <div>
+      <span style={{fontSize: '0.5em'}}>{this.getMessageTimeString(message)}</span>
+
+      <span style={{fontSize: '1em', fontStyle: 'bold'}}>{ message.text}</span>
+      <br/>
+      <span  style={{fontSize: '2em', fontStyle: 'italic' }}>&nbsp;&nbsp;{message.data.comment}</span>
+    </div>
+</ListGroup.Item>
+
+  )
 
   render() {
     return (
             this.state.isLoading? this.renderLoading:
             (
-                <>
-                {this.state.chatMessages.map(message=>(<div>{message.text}</div>))}
-                </>
+            <ListGroup variant="flush">
+                {this.state.chatMessages.map(this.renderMessage)}
+                </ListGroup>
             )
     )  }
 }

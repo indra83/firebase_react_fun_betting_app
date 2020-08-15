@@ -16,8 +16,8 @@ class App extends React.Component {
     };
 
     this.opts = {
-      height: '390',
-      width: '640',
+      height: '270',
+      width: '480',
       playerVars: {
        autoplay: 1,
       },
@@ -46,7 +46,7 @@ class App extends React.Component {
     <div className="App">
       <Container fluid>
         <Row>
-          <Col>
+          <Col xs={6}>
             <YouTube videoId="nNQMVC_njf0" opts={this.opts} />
             {this.state.authenticated ? (<Match user={this.state.user}/>) : (<SignIn/>)}
           </Col>

@@ -21,7 +21,7 @@ class TeamBets extends React.Component {
             <Card.Title>{this.getTeamTitle(this.teamId)}</Card.Title>
             <Card.Text>Total: {this.props.bets.reduce((total, bet)=>{return total + bet.betAmount}, 0)}</Card.Text>
             <ListGroup variant="flush">
-                {this.props.bets.map(bet=>(<ListGroup.Item>{bet.displayName + "--" + bet.betAmount}</ListGroup.Item>))}
+                {this.props.bets.map(bet=>(<ListGroup.Item key={bet.uid}>{bet.displayName + "--" + bet.betAmount}</ListGroup.Item>))}
             </ListGroup>
         </Card>
     )  }
