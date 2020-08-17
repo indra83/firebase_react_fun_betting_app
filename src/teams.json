@@ -1,0 +1,22 @@
+{
+    "kp":{
+        "name":"Kasi Purugulu",
+        "short":"KP"
+    },
+    "hnb":{
+        "name":"Huns n Buns",
+        "short":"HnB"
+    },
+    "hits":{
+        "name":"High in the Sky",
+        "short":"HiTS"
+    },
+    "bcb":{
+        "name":"Best Coast Boys",
+        "short":"BCB"
+    },
+    "gnb":{
+        "name":"Guns n B**bs",
+        "short":"GnB"
+    }
+}

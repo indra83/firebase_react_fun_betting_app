@@ -1,11 +1,13 @@
 import React from 'react';
-import YouTube from 'react-youtube';
 import { auth } from './firebase';
 import Match from './Match';
 import './App.css';
 import SignIn from './SignIn';
 import { Container, Row, Col } from 'react-bootstrap';
 import ChatWidget from './ChatWidget';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -14,14 +16,6 @@ class App extends React.Component {
       authenticated: false,
       loading: true
     };
-
-    this.opts = {
-      height: '270',
-      width: '480',
-      playerVars: {
-       autoplay: 1,
-      },
-    }
   }
 
   componentDidMount() {
@@ -45,9 +39,8 @@ class App extends React.Component {
   render(){ return (
     <div className="App">
       <Container fluid>
-        <Row>
-          <Col xs={6}>
-            <YouTube videoId="nNQMVC_njf0" opts={this.opts} />
+        <Row className="justify-content-md-center">
+          <Col md='12' lg='9'>
             {this.state.authenticated ? (<Match user={this.state.user}/>) : (<SignIn/>)}
           </Col>
           <Col>
