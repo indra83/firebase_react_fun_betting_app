@@ -40,7 +40,7 @@ class App extends React.Component {
     <div className="App">
       <Container fluid>
         <Row className="justify-content-md-center">
-          <Col md='12' lg='9'>
+          <Col sm={12} md={9}>
             {this.state.authenticated ? (<Match user={this.state.user}/>) : (<SignIn/>)}
           </Col>
           <Col>

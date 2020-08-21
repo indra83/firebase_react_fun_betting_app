@@ -7,12 +7,18 @@ import YouTube from 'react-youtube';
 
 import MatchBets from './MatchBets';
 import { Alert, Button, Container, Row, Col, ResponsiveEmbed } from 'react-bootstrap';
+import MyBet from './MyBet';
 
 class Match extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasMatchData:false,
       match:null,
+      matchId:null,
+      hasBetsData:false,
+      bets:null,
+      myBet:null,
       videoId:'nNQMVC_njf0'
     }
     this.opts = {
@@ -24,19 +30,41 @@ class Match extends React.Component {
     }
   }
 
+  setupBetsListener = () => {
+    this.unsubscribe_bets = db.collection("matches").doc(this.state.matchId).collection("bets")
+    .onSnapshot((querySnapshot) => {
+        var myBet;
+        var bets = {'team1':[], 'team2':[]} 
+
+        querySnapshot.forEach((doc) => {
+          var bet = doc.data();
+          if(doc.id===this.props.user.uid) myBet = bet;
+          bets[bet.team].push(bet);
+        });
+        console.log("MatchBets::Current data: ", bets);
+        this.setState({
+            hasBetsData: true, 
+            bets:bets, 
+            myBet:myBet
+        });
+    });
+  }
+
   componentDidMount() {
-    this.unsubscribe = db.collection("matches").doc("testmatch")
+    this.unsubscribe_match = db.collection("matches").doc("testmatch")
     .onSnapshot((doc) => {
-        console.log("Match::Current data: ", doc.data());
-        console.log("Match::Doc:",doc);
-        this.setState({match: doc.data(), matchId: doc.id});
-        if(this.state.videoId != doc.data().videoId)
-          this.setState({videoId:doc.data().videoId});
+        console.log("Match::Doc:",[doc,doc.data()]);
+        this.setState({hasMatchData:true, match: doc.data(), matchId: doc.id});
+        if(this.state.videoId !== this.state.match.videoId)
+          this.setState({videoId:this.state.match.videoId});
+        //fetch bets data
+        this.setupBetsListener();
     });
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
+    this.unsubscribe_match();
+    if(this.unsubscribe_bets) this.unsubscribe_bets();
   }
 
   renderer = ({ hours, minutes, seconds, completed }) => {
@@ -53,10 +81,12 @@ class Match extends React.Component {
   renderMatch = (match) => {
     if(match ) return (
         <Container className='border'>
-          <Row className="justify-content-center"><h3>{this.state.match.title}</h3></Row>
-          <Row className="justify-content-center"><Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/></Row>
-          <Row className="justify-content-center"><MatchBets matchId={this.state.matchId} match ={this.state.match} user={this.props.user}/></Row>
-            
+          <Row>
+            <Col xs={9} > <h3>{this.state.match.title}</h3><br/>
+            <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/></Col>
+            <Col xs={3}><MyBet match={this.state.match} myBet={this.state.myBet} user={this.props.user}/></Col>
+          </Row>
+          <Row className="justify-content-center"><MatchBets bets={this.state.bets} match ={this.state.match} user={this.props.user}/></Row>
         </Container>)
      else return (
         <Container>
@@ -74,7 +104,7 @@ class Match extends React.Component {
             </ResponsiveEmbed>
           </Col>
         </Row>
-        <Row className="justify-content-md-center">
+        <Row className="justify-content-center">
           <Col><Container >
             {this.renderMatch(this.state.match)}
           </Container></Col>

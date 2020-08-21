@@ -3,7 +3,7 @@ import React from 'react';
 import { db } from './firebase';
 import uuid from 'react-uuid'
 
-import { Form , Row, Button, Container} from 'react-bootstrap';
+import { Form , Row, Button, Container, Modal} from 'react-bootstrap';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -14,6 +14,7 @@ class MyBet extends React.Component {
     console.log("MyBet:: props", props);
     this.state = {
         bettingActive:props.bettingActive,
+        showForm:false,
         teamSelected:props.myBet?props.myBet.team:null,
         betAmount:props.myBet?props.myBet.betAmount:500,
         comment:props.myBet?props.myBet.comment:"",
@@ -87,12 +88,20 @@ class MyBet extends React.Component {
         });
   };
 
-  getBetForm = () =>{
-      return (
-        <Container>
-        <Form.Group >
-            <h3> Place Bet </h3>
+  handleFormClose = () => {this.setState({'showForm':false})};
+  handleFormShow = () => {this.setState({'showForm':true})};
 
+  getBetForm = () =>{
+      return (<>
+          <Button variant="primary" onClick={this.handleFormShow}>My Bet Button</Button>
+
+          <Modal show={this.state.showForm} onHide={this.handleFormClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Place Bet</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+          <Form.Group >
             <Form.Label>Team (selected team wins &rArr; you make money)</Form.Label>
             <div key='inline-radio' className="mb-3">            
             <Form.Check checked={this.state.teamSelected=='team1'} name='team' type='radio' id='team1' label={this.props.match.team1} onChange={this.handleTeamPick}/>
@@ -108,20 +117,21 @@ class MyBet extends React.Component {
             <Form.Control type="text"
                  value={this.state.comment} onChange={this.handleComment} />
 
-            <br/>
+          </Form.Group>
+          </Modal.Body>
 
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.handleFormClose}>Close</Button>
             <Button variant="primary" onClick={this.placeBet}>Place Bet</Button>
-        </Form.Group>
-        </Container>
+          </Modal.Footer>
+        </Modal></>
       )
   }
 
   render() {
-    return (this.state.bettingActive 
-        ? 
+    return (
         this.getBetForm()
-        : 
-        (<span>Betting has closed.</span>))
+    ) 
   }
 }
 
