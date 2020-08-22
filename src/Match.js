@@ -15,7 +15,6 @@ class Match extends React.Component {
     this.state = {
       hasMatchData:false,
       match:null,
-      matchId:null,
       hasBetsData:false,
       bets:null,
       myBet:null,
@@ -31,8 +30,9 @@ class Match extends React.Component {
   }
 
   setupBetsListener = () => {
-    this.unsubscribe_bets = db.collection("matches").doc(this.state.matchId).collection("bets")
+    this.unsubscribe_bets = db.collection("matches").doc(this.state.match.matchId).collection("bets")
     .onSnapshot((querySnapshot) => {
+        console.log("Match::querySnapshot--", querySnapshot);
         var myBet;
         var bets = {'team1':[], 'team2':[]} 
 
@@ -53,8 +53,10 @@ class Match extends React.Component {
   componentDidMount() {
     this.unsubscribe_match = db.collection("matches").doc("testmatch")
     .onSnapshot((doc) => {
-        console.log("Match::Doc:",[doc,doc.data()]);
-        this.setState({hasMatchData:true, match: doc.data(), matchId: doc.id});
+        var match = doc.data();
+        match.matchId = doc.id;
+        console.log("Match::got data--",match);
+        this.setState({hasMatchData:true, match: match});
         if(this.state.videoId !== this.state.match.videoId)
           this.setState({videoId:this.state.match.videoId});
         //fetch bets data
@@ -84,7 +86,7 @@ class Match extends React.Component {
           <Row>
             <Col xs={9} > <h3>{this.state.match.title}</h3><br/>
             <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/></Col>
-            <Col xs={3}><MyBet match={this.state.match} myBet={this.state.myBet} user={this.props.user}/></Col>
+            <Col xs={3}><MyBet style={{height:'100'}} match={this.state.match} myBet={this.state.myBet} user={this.props.user}/></Col>
           </Row>
           <Row className="justify-content-center"><MatchBets bets={this.state.bets} match ={this.state.match} user={this.props.user}/></Row>
         </Container>)
@@ -104,7 +106,7 @@ class Match extends React.Component {
             </ResponsiveEmbed>
           </Col>
         </Row>
-        <Row className="justify-content-center">
+        <Row >
           <Col><Container >
             {this.renderMatch(this.state.match)}
           </Container></Col>
