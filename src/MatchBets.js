@@ -16,30 +16,6 @@ class MatchBets extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // this.unsubscribe = db.collection("matches").doc(this.props.matchId).collection("bets")
-    // .onSnapshot((querySnapshot) => {
-    //     var myBet;
-    //     var bets = {'team1':[], 'team2':[]} 
-
-    //     querySnapshot.forEach((doc) => {
-    //       var bet = doc.data();
-    //       if(doc.id==this.props.user.uid) myBet = bet;
-    //       bets[bet.team].push(bet);
-    //     });
-    //     console.log("MatchBets::Current data: ", bets);
-    //     this.setState({
-    //         hasBetsData: true, 
-    //         bets:bets, 
-    //         myBet:myBet
-    //     });
-    // });
-  }
-
-  componentWillUnmount() {
-    // this.unsubscribe();
-  }
-
   render() {
     return (
         <Container>

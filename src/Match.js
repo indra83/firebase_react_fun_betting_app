@@ -32,6 +32,8 @@ class Match extends React.Component {
   setupBetsListener = () => {
     this.unsubscribe_bets = db.collection("matches").doc(this.state.match.matchId).collection("bets")
     .onSnapshot((querySnapshot) => {
+        if(querySnapshot.metadata.hasPendingWrites)
+          return; // ignore
         console.log("Match::querySnapshot--", querySnapshot);
         var myBet;
         var bets = {'team1':[], 'team2':[]} 
@@ -81,12 +83,17 @@ class Match extends React.Component {
     }
 
   renderMatch = (match) => {
-    if(match ) return (
+    if(this.state.hasMatchData) return (
         <Container className='border'>
           <Row>
             <Col xs={9} > <h3>{this.state.match.title}</h3><br/>
             <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/></Col>
-            <Col xs={3}><MyBet style={{height:'100'}} match={this.state.match} myBet={this.state.myBet} user={this.props.user}/></Col>
+            <Col xs={3}>
+              {this.state.hasBetsData?
+              (<MyBet match={this.state.match} myBet={this.state.myBet} user={this.props.user} key={this.state.match.startTime.toString() + 
+              this.state.myBet.timestamp.toString()}/>):
+              (<Spinner animation="border" />)}
+            </Col>
           </Row>
           <Row className="justify-content-center"><MatchBets bets={this.state.bets} match ={this.state.match} user={this.props.user}/></Row>
         </Container>)
@@ -108,7 +115,7 @@ class Match extends React.Component {
         </Row>
         <Row >
           <Col><Container >
-            {this.renderMatch(this.state.match)}
+            {this.renderMatch()}
           </Container></Col>
         </Row>
       </Container>
