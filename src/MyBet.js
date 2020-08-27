@@ -22,7 +22,7 @@ class MyBet extends React.Component {
 
   componentDidMount() {
     var delta = this.props.match.startTime.toDate() - new Date();
-    console.log("MyBet::compMount",[this.props, delta]);
+    // console.log("MyBet::compMount",[this.props, delta]);
     this.setState({
         // showForm:false,
         bettingActive: delta > 0
@@ -37,20 +37,18 @@ class MyBet extends React.Component {
   }
 
   handleTeamPick = (e) => {
-    console.log("MyBet::radio--",e);
-    this.setState({teamSelected:e});
-    this.handleBetChange();
+    // console.log("MyBet::radio--",e);
+    this.setState({teamSelected:e}, this.handleBetChange);
   };
 
   handleBetAmountChange = (e) => {
-    //   console.log("MyBet::slider--",e);
-      this.setState({betAmount:e});
-      this.handleBetChange();
+      // console.log("MyBet::slider--",e);
+      this.setState({betAmount:e}, this.handleBetChange);
   };
 
   handleComment = (e) => {
       this.setState({comment:e.target.value});
-      this.handleBetChange();
+      // this.handleBetChange();
   };
  
   handleFormClose = () => {this.setState({'showForm':false})};
@@ -58,11 +56,13 @@ class MyBet extends React.Component {
   handleFormShow = () => {
     if(!this.state.bettingActive) return;
     this.setState({
-    teamSelected:this.props.myBet?this.props.myBet.team:null,
-    betAmount:this.props.myBet?this.props.myBet.betAmount:500,
-    comment:this.props.myBet?this.props.myBet.comment:"",
-    'showForm':true
-  })};
+      teamSelected:this.props.myBet?this.props.myBet.team:null,
+      betAmount:this.props.myBet?this.props.myBet.betAmount:500,
+      comment:this.props.myBet?this.props.myBet.comment:"",
+      showForm:true,
+      enableBetButton:false
+    })
+  };
 
   getSelectedTeamName = () => {
     if(!this.state.teamSelected)
@@ -71,10 +71,10 @@ class MyBet extends React.Component {
       return getTeams()[this.props.match.team1]['short'];
     return getTeams()[this.props.match.team2]['short'];
   }
- 
+
   handleBetChange = () => {
-    console.log("Mybet::betchange--", this.props.myBet);
-    console.log("Mybet::betchange--", [this.state.teamSelected,this.state.betAmount]);
+    // console.log("Mybet::betchange--", this.props.myBet);
+    // console.log("Mybet::betchange--", [this.state.teamSelected,this.state.betAmount]);
     if(!this.props.myBet){
       this.setState({'enableBetButton':true});
       return;
@@ -146,7 +146,6 @@ class MyBet extends React.Component {
     else
       return (<small>{this.props.myBet.betAmount} on {getTeams()[this.props.match.team2]['short']}</small>);
   }
-
   getBetForm = () =>{
       return (<>
         {this.state.bettingActive?
@@ -195,7 +194,7 @@ class MyBet extends React.Component {
 
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleFormClose}>Close</Button>
-            <Button variant="primary" onClick={this.placeBet} disabled={this.state.enableBetButton}>{this.props.myBet?'Revise':'Place'} Bet</Button>
+            <Button variant="primary" onClick={this.placeBet} disabled={!this.state.enableBetButton}>{this.props.myBet?'Revise':'Place'} Bet</Button>
           </Modal.Footer>
         </Modal></>
       )

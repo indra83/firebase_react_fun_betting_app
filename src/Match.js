@@ -53,8 +53,10 @@ class Match extends React.Component {
   }
 
   componentDidMount() {
-    this.unsubscribe_match = db.collection("matches").doc("testmatch")
-    .onSnapshot((doc) => {
+    this.unsubscribe_match = db.collection("matches").orderBy("order", "desc").limit(1)//.doc("testmatch")
+    .onSnapshot((docs) => {
+      console.log("match::match_query--",docs);
+        var doc = docs.docs[0];
         var match = doc.data();
         match.matchId = doc.id;
         console.log("Match::got data--",match);
@@ -82,6 +84,11 @@ class Match extends React.Component {
         }
     }
 
+  getReactKey = () => {
+    var myBetKey = this.state.myBet? this.state.myBet.timestamp.toString(): '';
+    return myBetKey + this.state.match.startTime.toString();
+  }
+
   renderMatch = (match) => {
     if(this.state.hasMatchData) return (
         <Container className='border'>
@@ -90,8 +97,7 @@ class Match extends React.Component {
             <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/></Col>
             <Col xs={3}>
               {this.state.hasBetsData?
-              (<MyBet match={this.state.match} myBet={this.state.myBet} user={this.props.user} key={this.state.match.startTime.toString() + 
-              this.state.myBet.timestamp.toString()}/>):
+              (<MyBet match={this.state.match} myBet={this.state.myBet} user={this.props.user} key={this.getReactKey()}/>):
               (<Spinner animation="border" />)}
             </Col>
           </Row>
