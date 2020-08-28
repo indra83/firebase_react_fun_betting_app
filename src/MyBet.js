@@ -149,7 +149,7 @@ class MyBet extends React.Component {
   getBetForm = () =>{
       return (<>
         {this.state.bettingActive?
-          (<Button style={{height:'100%', margin:'10px'}} onClick={this.handleFormShow}>
+          (<Button style={{height:'80%', margin:'10px'}} onClick={this.handleFormShow}>
               {this.props.myBet? (<>Revise Bet <br/> {this._helper_getCurrentBetStr()}</>):('Place Bet')
             }</Button>):
            (<>{this.props.myBet?

@@ -27,14 +27,15 @@ class TeamBets extends React.Component {
         <Card>
             <Card.Img variant='top' src={this.getTeamLogo(this.teamId)}/>
             <Card.Title>{this.getTeamTitle(this.teamId)}</Card.Title>
-            <Card.Text>Total: {this.props.bets.reduce((total, bet)=>{return total + bet.betAmount}, 0)}</Card.Text>
+            <Card.Text>Total <h3><Badge variant="primary">{this.props.bets.reduce((total, bet)=>{return total + bet.betAmount}, 0)}</Badge></h3></Card.Text>
             <ListGroup variant="flush">
                 {this.props.bets.map(bet=>(<ListGroup.Item key={bet.uid}>
-                    <Container><Row>
-                        <Col xs={3}><Image src={this.img} className='thumbnail'
+                    <Container style={{padding:0}}><Row className="align-items-center" style={{margin:0}}>
+                        <Col md={3}><Image src={this.img} className='thumbnail'
                             style={{width:'48px', height:'48px', paddingLeft:'0', paddingRight:'0'}}></Image></Col>
-                        <Col xs={6}><span style={{fontSize:'0.5em', textOverflow:'ellipsis', whiteSpace:'pre'}}>{bet.displayName}</span></Col>
-                        <Col xs={3}><Badge variant='success'>{bet.betAmount}</Badge></Col>
+                        <Col md={9}>
+                            <span style={{fontSize:'0.5em', textOverflow:'ellipsis', whiteSpace:'pre'}}>{bet.displayName}</span><br/>
+                            <Badge pill variant='success'>{bet.betAmount}</Badge></Col>
                     </Row></Container>
                     </ListGroup.Item>))}
             </ListGroup>

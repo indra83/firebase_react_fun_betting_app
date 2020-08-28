@@ -56,6 +56,9 @@ class Match extends React.Component {
     this.unsubscribe_match = db.collection("matches").orderBy("order", "desc").limit(1)//.doc("testmatch")
     .onSnapshot((docs) => {
       console.log("match::match_query--",docs);
+        if(docs.metadata.fromCache) {
+          return; // ignore cached results
+        }
         var doc = docs.docs[0];
         var match = doc.data();
         match.matchId = doc.id;
@@ -74,13 +77,13 @@ class Match extends React.Component {
   }
 
   renderer = ({ hours, minutes, seconds, completed }) => {
-        var timeLeftStr = hours.toString()+':'+minutes.toString()+':'+seconds.toString();
+        var timeLeftStr = hours.toString().padStart(2,"0")+':'+minutes.toString().padStart(2,"0")+':'+seconds.toString().padStart(2,"0");
         if (completed) {
             // Render a completed state
             return <Alert variant='warning' >Betting has ended.</Alert>;
         } else {
             // Render a countdown
-            return <Alert variant='primary'>Betting ends in <b>{timeLeftStr}</b> <Button>blah</Button></Alert>;
+            return <Alert variant='primary'>Betting ends in <b>{timeLeftStr}</b></Alert>;
         }
     }
 
@@ -91,10 +94,10 @@ class Match extends React.Component {
 
   renderMatch = (match) => {
     if(this.state.hasMatchData) return (
-        <Container className='border'>
-          <Row>
-            <Col xs={9} > <h3>{this.state.match.title}</h3><br/>
-            <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer}/></Col>
+        <Container className='border' style={{marginTop:10}}>
+          <Row className="align-items-center">
+            <Col xs={9} > <h4>{this.state.match.title}</h4><br/>
+            <Countdown date={this.state.match.startTime.toDate()} renderer={this.renderer} key={this.state.match.startTime}/></Col>
             <Col xs={3}>
               {this.state.hasBetsData?
               (<MyBet match={this.state.match} myBet={this.state.myBet} user={this.props.user} key={this.getReactKey()}/>):
@@ -113,7 +116,7 @@ class Match extends React.Component {
     return (
       <Container >
         <Row>
-          <Col>
+          <Col md={{ span: 8, offset: 2 }}>
             <ResponsiveEmbed aspectRatio="16by9">
               <YouTube videoId={this.state.videoId} opts={this.opts} />
             </ResponsiveEmbed>
