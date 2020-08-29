@@ -23,6 +23,13 @@ const userpics = {
     HNMyFBs8mUhneA1lj3QBOcWFr5J2:{'nick':'faltoo', 'dp':faltoo},
     JzGkQREOu9YyX93F9TUnWN7TvHT2:{'nick':'teza', 'dp':teza},
     hcBL3yk4RmM9as1ZaUsDCEf7Gb12:{'nick':'chippa', 'dp':chippa},
+
+    '0wv8GxpipwdL0OziXNjM0cTsKUu1':{'nick':'kc', 'dp':kc},
+    I3prJXYMmWgAa8yxX8LXyzo2B483:{'nick':'chicha', 'dp':chicha},
+    NCFOSn1seFM755K9TX5N4ddCzHO2:{'nick':'sr', 'dp':sr},
+    SCwVGP6qoFWCmziAfLvFBItZUdi1:{'nick':'kuke', 'dp':kuke},
+    mI9212JSlHdPXscvxed1cWM2gtB3:{'nick':'sandi', 'dp':sandi}
+    // hcBL3yk4RmM9as1ZaUsDCEf7Gb12:{'nick':'chippa', 'dp':chippa},
 }
 
 export default function getUserDP(uid){

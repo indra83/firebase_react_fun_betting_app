@@ -52,12 +52,12 @@ class ChatWidget extends React.Component {
   renderLoading=()=>(<span><Spinner animation="border" />Fetching chat messages...</span>)
 
   renderMessage = (message) =>(
-    <ListGroup.Item key={message.timestamp}>    <div>
-      <span style={{fontSize: '0.5em'}}>{this.getMessageTimeString(message)}</span>
-
+    <ListGroup.Item key={message.timestamp}>
+      <div>
+      <span style={{fontSize: '0.75em'}}>{this.getMessageTimeString(message)}</span>
       <span style={{fontSize: '1em', fontStyle: 'bold'}}>{ message.text}</span>
       <br/>
-      <span  style={{fontSize: '2em', fontStyle: 'italic' }}>&nbsp;&nbsp;{message.data.comment}</span>
+      <span  style={{fontSize: '1.4em', fontStyle: 'italic' }}>&nbsp;&nbsp;{message.data.comment}</span>
     </div>
 </ListGroup.Item>
 

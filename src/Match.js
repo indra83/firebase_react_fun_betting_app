@@ -24,7 +24,7 @@ class Match extends React.Component {
       height: 'auto',
       width: 'auto',
       playerVars: {
-       autoplay: 0,
+       autoplay: 1,
       },
     }
   }
