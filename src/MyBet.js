@@ -127,6 +127,7 @@ class MyBet extends React.Component {
         type:'bet', 
         data:newBet, 
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        uid: user.uid,
         text: (newBet.displayName + " bet " + newBet.betAmount + " on "+ betOnTeamId)
       };
 
@@ -135,10 +136,15 @@ class MyBet extends React.Component {
       batch.commit().then(function() {
             console.log("Document successfully written!");
         })
-        .catch(function(error) {
-            console.error("Error writing document: ", error);
-        });
+        .catch(this._handle_errorWritingBet);
   };
+
+  _handle_errorWritingBet = (error) => {
+            console.log("Error writing document: ", error);
+            console.error("Error writing document: ", error);
+            alert('Oops, failed to create/update bet... Contact Indra');
+            this.handleFormClose();
+  }
 
   _helper_getCurrentBetStr = () => {
     if(this.props.myBet.team === 'team1')

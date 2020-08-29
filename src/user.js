@@ -1,14 +1,33 @@
 import React from 'react';
 
-import {Container, Row,Col, Image} from 'react-bootstrap';
+import pellam from './images/users/pellam.jpg'
+import boy from './images/users/boy.jpg'
+import faltoo from './images/users/faltoo.jpg'
+import kc from './images/users/kc.jpg'
+import bhim from './images/users/bhim.jpg'
+import baka from './images/users/baka.jpg'
+import kuke from './images/users/kuke.jpg'
+import indra from './images/users/indra.jpg'
+import sandi from './images/users/sandi.jpg'
+import chippa from './images/users/chippa.jpg'
+import sr from './images/users/sr.jpg'
+import nara from './images/users/nara.jpg'
+import srihari from './images/users/srihari.jpg'
+import teza from './images/users/teza.jpg'
+import chicha from './images/users/chicha.jpg'
 
+const userpics = {
+    ZDUHy69hp7TOXBiQHGUp2dCedv32:{'nick':'indra', 'dp':indra},
+    AsWAHPnnLBZg1DsXfgQ2Ye1BhcF2:{'nick':'baka', 'dp':baka},
+    CMhnQboiWgeTg5UJtV72rwjSMp33:{'nick':'makdi', 'dp':baka},
+    HNMyFBs8mUhneA1lj3QBOcWFr5J2:{'nick':'faltoo', 'dp':faltoo},
+    JzGkQREOu9YyX93F9TUnWN7TvHT2:{'nick':'teza', 'dp':teza},
+    hcBL3yk4RmM9as1ZaUsDCEf7Gb12:{'nick':'chippa', 'dp':chippa},
+}
 
-
-export default function getUserUI(name, profilePic, user){
-    return (<Container>
-        <Row><Col><Image src='https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png' 
-        className='thumbnail float-left'
-        style={{width:'48px', height:'48px'}}></Image></Col>
-        <Col><span style={{fontSize:'0.5em'}}>{name}</span></Col></Row>
-    </Container>)
-};
+export default function getUserDP(uid){
+    if(uid in userpics) {
+        return userpics[uid];
+    }
+    return {'nick':'', 'dp':''};
+}

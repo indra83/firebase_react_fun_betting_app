@@ -3,14 +3,14 @@ import React from 'react';
 import {Card, ListGroup, Container, Row, Col, Badge, Image} from 'react-bootstrap';
 
 import getTeams from './data'
-import getUserUI from './user'
+import getUserDP from './user'
 
 class TeamBets extends React.Component {
   constructor(props) {
     super(props);
     console.log('TeamBets::props',props);
     this.teamId = props.whichTeam == 'team1' ? props.match.team1 : props.match.team2;
-    this.img = 'https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png';
+    // this.img = 'https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png';
   }
 
   getTeamTitle = (teamId) => {
@@ -31,10 +31,10 @@ class TeamBets extends React.Component {
             <ListGroup variant="flush">
                 {this.props.bets.map(bet=>(<ListGroup.Item key={bet.uid}>
                     <Container style={{padding:0}}><Row className="align-items-center" style={{margin:0}}>
-                        <Col md={3}><Image src={this.img} className='thumbnail'
-                            style={{width:'48px', height:'48px', paddingLeft:'0', paddingRight:'0'}}></Image></Col>
-                        <Col md={9}>
-                            <span style={{fontSize:'0.5em', textOverflow:'ellipsis', whiteSpace:'pre'}}>{bet.displayName}</span><br/>
+                        <Col ><Image src={getUserDP(bet.uid).dp} 
+                            style={{width:'84px', height:'120px', paddingLeft:'0', paddingRight:'0'}}></Image></Col>
+                        <Col >
+                            <span style={{fontSize:'0.75em', textOverflow:'ellipsis', whiteSpace:'pre'}}>{bet.displayName}</span><br/>
                             <Badge pill variant='success'>{bet.betAmount}</Badge></Col>
                     </Row></Container>
                     </ListGroup.Item>))}
